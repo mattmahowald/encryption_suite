@@ -8,21 +8,21 @@ or decrypt the message
 """
 
 NUM_ALPHA_LETTERS = 26
+CAESAR_OFFSET = 3
 
 def encrypt_caesar(plaintext):
     """
     Encrypts plaintext using a Caesar cipher.
     Add more implementation details here.
     """
-    caesar_offset = 3
     new_string = ""
     uppertext = plaintext.upper()
     for letter in uppertext:
         if(letter.isalpha()):
-            if((ord(letter) + caesar_offset) <= ord('Z')):
-                new_string += chr((ord(letter) + caesar_offset))
+            if((ord(letter) + CAESAR_OFFSET) <= ord('Z')):
+                new_string += chr((ord(letter) + CAESAR_OFFSET))
             else:
-                new_string += chr((ord(letter) - NUM_ALPHA_LETTERS + caesar_offset))
+                new_string += chr((ord(letter) - NUM_ALPHA_LETTERS + CAESAR_OFFSET))
     return new_string
 
 def decrypt_caesar(ciphertext):
@@ -34,10 +34,10 @@ def decrypt_caesar(ciphertext):
     uppertext = ciphertext.upper()
     for letter in uppertext:
         if(letter.isalpha()):
-            if((ord(letter) + 3) < ord('Z')):
-                new_string += chr((ord(letter) + 3))
+            if((ord(letter) + CAESAR_OFFSET) < ord('Z')):
+                new_string += chr((ord(letter) + CAESAR_OFFSET))
             else:
-                new_string += chr((ord(letter) - 23))
+                new_string += chr((ord(letter) - NUM_ALPHA_LETTERS + CAESAR_OFFSET))
     return new_string
 
 def encrypt_vigenere(plaintext, keyword):
@@ -50,7 +50,7 @@ def encrypt_vigenere(plaintext, keyword):
         key_char = keyword[i % len(keyword)]
         new_chr = chr(ord(plaintext[i]) + ord(key_char) - ord('A'))
         if(not new_chr.isalpha()):
-            new_chr = chr(ord(new_chr) - 26)
+            new_chr = chr(ord(new_chr) - NUM_ALPHA_LETTERS)
         new_string += new_chr
     return new_string
 
@@ -64,7 +64,7 @@ def decrypt_vigenere(ciphertext, keyword):
         key_char = keyword[i % len(keyword)]
         new_chr = chr(ord(ciphertext[i]) + ord('A') - ord(key_char))
         if(not new_chr.isalpha()):
-            new_chr = chr(ord(new_chr) + 26)
+            new_chr = chr(ord(new_chr) + NUM_ALPHA_LETTERS)
         new_string += new_chr
     return new_string
     
@@ -73,46 +73,54 @@ def encrypt_railfence(plaintext, num_rails):
     Encrypts plaintext using a railfence cipher.
     Add more implementation details here.
     """
-    rails = ["" for i in range(num_rails)]
-    print(rails)
-   
-    row = 0
-    d = 1
-    for ch in plaintext:
-        if(not ch.isalpha()): continue
-        rails[row] = rails[row] + ch
-        row += d
-        if row == num_rails:
-           d = -1
-           row -= 2
-        if row == -1:
-           d = 1
-           row += 2 
-    print(rails)
+
+    railfence_constant = (num_rails - 1) * 2
+    rails = [""] * num_rails
+    for ch, index in ciphertext, len(ciphertext):
+        rail_index = index % railfence_constant
+        if(rail_index < num_rails):
+            rails[rail_index] += ch
+        else:
+            rail_index = num_rails - (rail_index % num_rails)
+            rails[rail_index] += ch
     return "".join(rails)
+    # http://codegolf.stackexchange.com/questions/10544/rail-fence-cipher
+
 
 
 def decrypt_railfence(ciphertext, num_rails):
     """
-    Encrypts plaintext using a railfence cipher.
+    Decrypts ciphertext using a railfence cipher.
     Add more implementation details here.
     """
-    pass  # Your implementation here
+    railfence_constant (num_rails - 1) * 2
+    rails = [""] * num_rails
+    rail
+
+
 
 def read_from_file(filename):
     """
     Reads and returns content from a file.
     Add more implementation details here.
     """
-    pass  # Your implementation here
+    raw_text = ""
+    with open(filename, 'r') as f:
+        lines = f.readlines()
+    for line in lines:
+        for ch in line:
+            if(ch.isalpha()):
+                raw_text += ch
+    return raw_text
+
 
 def write_to_file(filename, content):
     """
     Writes content to a file.
     Add more implementation details here.
     """
-    pass  # Your implementation here
-
+    with open(filename, 'w+') as f:
+        f.write(content)
 
 def get_keyword():
     return input("Enter a keyword: ").upper()
@@ -121,16 +129,15 @@ def get_nrails():
     return int(input("Enter an integer: "))
 
 def transform_text(raw_text, operation, tool):
-    print("*Output*") 
     if(operation == 'E'):
-        if(tool == 'C'):
+        if  (tool == 'C'):
             return encrypt_caesar(raw_text)
         elif(tool == 'V'):
             return encrypt_vigenere(raw_text, get_keyword())
         elif(tool == 'R'):
             return encrypt_railfence(raw_text, get_nrails())
     elif(operation == 'D'):
-        if(tool == 'C'):
+        if  (tool == 'C'):
             return decrypt_caesar(raw_text)
         elif(tool == 'V'):
             return decrypt_vigenere(raw_text, get_keyword())
@@ -149,17 +156,26 @@ def run_suite():
     Asks the user for input text from a string or file, whether to encrypt
     or decrypt, what tool to use, and where to show the output.
     """
-
+    print("*Input*")
     raw_text = "" # Variable for the to-be-encrypted/decrypted text 
-    if(input_type_is_file()):
+    if(type_is_file()):
         filename = prompt_for_filename()
         raw_text = read_from_file(filename)
     else:
         raw_text = input("Enter the string to encrypt or decrypt: ").upper()
+
+
+    print("*Transform*")
     operation = transformation_type()
     tool = encryption_method() 
     message = transform_text(raw_text, operation, tool)
-    print(message)
+
+
+    print("*Output*") 
+    if(type_is_file()):
+        write_to_file(prompt_for_filename(), message)
+    else:
+        print(message)
 
 def encryption_method():
     input_type = input("(C)aesar, (V)igenere, or (R)ailfence? ").upper()
@@ -168,18 +184,16 @@ def encryption_method():
     return input_type[0]  
 
 def transformation_type():
-    print("*Transform*")
     input_type = input("(E)ncrypt or (D)ecrypt? ").upper()
     while not input_type or input_type[0] not in ['E', 'D']:
         input_type = input("Please enter either 'E' or 'D': ").upper()
     return input_type[0]
 
-def input_type_is_file():
-    print("*Input*")
-    input_type = input("(F)ile or (S)tring? ").upper()
-    while not input_type or input_type[0] not in ['F', 'S']:
-        input_type = input("Please enter either 'F' or 'S': ").upper()
-    return input_type[0] == 'F'
+def type_is_file():
+    selection = input("(F)ile or (S)tring? ").upper()
+    while not selection or selection[0] not in ['F', 'S']:
+        selection = input("Please enter either 'F' or 'S': ").upper()
+    return selection[0] == 'F'
 
 # Do not modify code beneath this point.
 def should_continue():
