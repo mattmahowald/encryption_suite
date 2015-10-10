@@ -34,7 +34,7 @@ def decrypt_caesar(ciphertext):
     uppertext = ciphertext.upper()
     for letter in uppertext:
         if(letter.isalpha()):
-            if((ord(letter) + CAESAR_OFFSET) < ord('Z')):
+            if((ord(letter) + CAESAR_OFFSET) <= ord('Z')):
                 new_string += chr((ord(letter) + CAESAR_OFFSET))
             else:
                 new_string += chr((ord(letter) - NUM_ALPHA_LETTERS + CAESAR_OFFSET))
@@ -94,8 +94,20 @@ def decrypt_railfence(ciphertext, num_rails):
     Add more implementation details here.
     """
     railfence_constant (num_rails - 1) * 2
-    rails = [""] * num_rails
-    rail
+    rails = [""] * railfence_constant
+    l = []
+    rail_length = len(ciphertext) // railfence_constant
+    leftover = len(ciphertext) % railfence_constant
+    for i in range(railfence_constant)
+        if(leftover > 0):
+            
+    for i in range(num_rails):
+        if(i == 0):
+
+        elif(i == num_rails - 1):
+
+        else:
+            if(i < )
 
 
 
