@@ -44,6 +44,7 @@ def encrypt_vigenere(plaintext, keyword):
     """
     Encrypts plaintext using a Vigenere cipher with a keyword.
     Add more implementation details here.
+    
     """
     new_string = ""
     for i in range(len(plaintext)):
