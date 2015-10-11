@@ -234,7 +234,11 @@ def transform_text(raw_text, operation, tool):
         print("We're sorry, an error has occurred")
 
 def prompt_for_filename():
-    # Assumes user will enter a valid filename
+    '''
+    Prompts user for a filename
+    Assumes user will enter a valid filename, but checks validity
+    elsewhere in the program
+    '''
     return input('Filename? ')
 
 def run_suite():
