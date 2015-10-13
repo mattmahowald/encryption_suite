@@ -308,7 +308,6 @@ def type_is_file():
         selection = input("Please enter either 'F' or 'S': ").upper()
     return selection[0] == 'F'
 
-# Do not modify code beneath this point.
 def should_continue():
     """
     Asks the user whether they would like to continue.
