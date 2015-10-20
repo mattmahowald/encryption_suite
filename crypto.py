@@ -4,7 +4,7 @@ Name: Matt Mahowald
 Date: October 9th 2015
 Description: crypto.py implements a cryptography suite that allows
 the user to input a message or a filename and then either encrypt 
-or decrypt the message
+or decrypt the message.
 """
 # Import to check if a file exists
 import os.path
